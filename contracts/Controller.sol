@@ -37,11 +37,11 @@ contract Controller is ERC20, Pausable {
   // ########### ERC20 FUNCTIONS  ###############
   // ############################################
 
-  function name() public constant returns (string) {
+  function name() public constant returns (bytes32) {
     return "Upgradeable token";
   }
 
-  function symbol() public constant returns (string) {
+  function symbol() public constant returns (bytes32) {
     return "UPT";
   }
 
