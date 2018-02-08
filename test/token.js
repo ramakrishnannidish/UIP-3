@@ -7,9 +7,11 @@ contract('UpgradeableToken', (accounts) => {
   let controller;
 
   beforeEach(async () => {
-    token = await UpgradeableToken.new();
+    token = await token.new();
     controller = await Controller.new(token.address);
     await token.transferOwnership(controller.address);
+    var initializeData = ((web3.eth.contract(controller.abi)).at(controller.address)).Initialize.getData();
+    await web3.eth.sendTransaction({from: accounts[0], to: token.address, data: initializeData, gas: 4500000});
   });
 
   it('it should delegate call to controller and allow transfer', async () => {
@@ -28,5 +30,11 @@ contract('UpgradeableToken', (accounts) => {
 
     assert.equal(balance, 10000000000000);
     assert.equal(totalSupply, 10000000000000);
+
+    var initializedData = ((web3.eth.contract(controller.abi)).at(controller.address)).getInitializationBlock.getData();
+    const initialized = await web3.eth.call({from: accounts[1], to: token.address, data: initialized, gas: 4500000});
+
+    console.log(initialized);
+
   });
 });

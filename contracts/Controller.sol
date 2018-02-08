@@ -5,8 +5,10 @@ import "./UpgradeableToken.sol";
 import "./ERC20.sol";
 import "./ERC223ReceivingContract.sol";
 import "./Pausable.sol";
+import "./Initializable.sol";
 
-contract Controller is ERC20, Pausable {
+
+contract Controller is ERC20, Pausable, Initializable {
   using SafeMath for uint;
 
   address public tokenAddr;
