@@ -1,14 +1,13 @@
 pragma solidity ^0.4.11;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import 'zeppelin-solidity/contracts/lifecycle/Pausable.sol';
 import "./UpgradeableToken.sol";
 import "./ERC20.sol";
 import "./ERC223ReceivingContract.sol";
-import "./Pausable.sol";
-import "./Initializable.sol";
 
 
-contract Controller is ERC20, Pausable, Initializable {
+contract Controller is ERC20, Pausable {
   using SafeMath for uint;
 
   address public tokenAddr;
@@ -21,16 +20,15 @@ contract Controller is ERC20, Pausable, Initializable {
     tokenAddr = _tokenAddr;
   }
 
-  function setContract(address _tokenAddr) public {
+  function setContract(address _tokenAddr) public onlyOwner whenPaused {
     tokenAddr = _tokenAddr;
   }
 
-  function kill(address _newController) public {
-    if (tokenAddr != address(0)) { Ownable(tokenAddr).transferOwnership(msg.sender); }
+  function kill(address _newController) public onlyOwner whenPaused {
     selfdestruct(_newController);
   }
 
-  function assignTokens(address _to, uint amount) public {
+  function assignTokens(address _to, uint amount) public onlyOwner {
     balances[_to] = balances[_to].add(amount);
     total_supply = total_supply.add(amount);
   }
