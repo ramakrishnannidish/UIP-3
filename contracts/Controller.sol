@@ -5,8 +5,6 @@ import "./CappedToken.sol";
 
 contract Controller is CappedToken {
 
-  string public constant name = "Upgradeable Token";
-  string public constant symbol = "UPT";
   uint8 public constant decimals = 18;
 
   function Controller(uint256 _cap) public
