@@ -11,6 +11,6 @@ contract UpgradeableToken is Storage, DelegateProxy {
 
   // fallback function
   function () public payable {
-    delegatedFwd(crate['controller'], msg.data);
+    delegatedFwd(addresses['controller'], msg.data);
   }
 }
