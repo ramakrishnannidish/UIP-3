@@ -1,5 +1,5 @@
 {
-  "name": "upgradeable-token",
+  "name": "uip3",
   "license": "MIT",
   "main": "truffle.js",
   "scripts": {
