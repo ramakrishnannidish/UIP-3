@@ -31,22 +31,22 @@ contract PausableToken is Pausable, ERC827Token {
   }
 
   function transferData(address _to, uint256 _value, bytes _data) public whenNotPaused returns (bool) {
-    return super.transfer(_to, _value, _data);
+    return super.transferAndCall(_to, _value, _data);
   }
 
   function transferFromData(address _from, address _to, uint256 _value, bytes _data) public whenNotPaused returns (bool) {
-    return super.transferFrom(_from, _to, _value, _data);
+    return super.transferFromAndCall(_from, _to, _value, _data);
   }
 
   function approveData(address _spender, uint256 _value, bytes _data) public whenNotPaused returns (bool) {
-    return super.approve(_spender, _value, _data);
+    return super.approveAndCall(_spender, _value, _data);
   }
 
   function increaseApprovalData(address _spender, uint _addedValue, bytes _data) public whenNotPaused returns (bool success) {
-    return super.increaseApproval(_spender, _addedValue, _data);
+    return super.increaseApprovalAndCall(_spender, _addedValue, _data);
   }
 
   function decreaseApprovalData(address _spender, uint _subtractedValue, bytes _data) public whenNotPaused returns (bool success) {
-    return super.decreaseApproval(_spender, _subtractedValue, _data);
+    return super.decreaseApprovalAndCall(_spender, _subtractedValue, _data);
   }
 }

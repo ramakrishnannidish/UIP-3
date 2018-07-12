@@ -1,16 +1,16 @@
 pragma solidity ^0.4.11;
 
-import "../../contracts/Controller.sol";
+import "../../contracts/LogicBank.sol";
 
 
-contract MockController is Controller {
+contract MockLogicBank is LogicBank {
 
   string public name = "Upgradeable Token";
   string public symbol = "UPT";
   uint8 public decimals = 18;
 
-  function MockController(uint256 _cap) public
-    Controller(_cap)
+  function MockLogicBank(uint256 _cap) public
+    LogicBank(_cap)
   {
 
   }

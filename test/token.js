@@ -1,19 +1,19 @@
-const Controller = artifacts.require('./helpers/MockController.sol');
+const LogicBank = artifacts.require('./helpers/MockLogicBank.sol');
 const UpgradeableToken = artifacts.require('./UpgradeableToken.sol');
 const Founder = web3.eth.accounts[0];
 const Investor = web3.eth.accounts[1];
-const assertJump = require("./helpers/assertJump");
+const assertRevert = require("./helpers/assertRevert");
 
-contract('Test', (accounts) => {
+contract('UpgradeableToken', (accounts) => {
   let proxy;
   let proxyInstance;
   let controller;
 
   before(async () => {
-    controller = await Controller.new(100000e18);
+    controller = await LogicBank.new(100000e18);
     proxyInstance = await UpgradeableToken.new();
     await proxyInstance.setKeyHolder('controller', controller.address);
-    proxy = Controller.at(proxyInstance.address);
+    proxy = LogicBank.at(proxyInstance.address);
     await proxy.initialize(100000e18);
     await proxy.mint(Founder, 4000000000);
   });
@@ -61,7 +61,7 @@ contract('Test', (accounts) => {
     await proxy.transferFrom(Founder, Investor, 2000000000, {from: Investor});
 
     // change controller and set
-    const controllerNew = await Controller.new(100000e18);
+    const controllerNew = await LogicBank.new(100000e18);
     await proxyInstance.setKeyHolder('controller', controllerNew.address);
 
     controller = controllerNew;
@@ -74,12 +74,12 @@ contract('Test', (accounts) => {
   });
 
   it('should not allow to set controller by non owner', async () => {
-    const controllerNew = await Controller.new(100000e18);
+    const controllerNew = await LogicBank.new(100000e18);
     try {
       await proxyInstance.setKeyHolder('controller', controllerNew.address, {from: Investor});
       assert.fail("should have failed before")
     } catch(error) {
-      assertJump(error);
+      assertRevert(error);
     }
     assert.equal(await proxyInstance.addresses.call('controller'), controller.address)
     assert.equal(await proxyInstance.addresses.call('owner'), accounts[0])
@@ -102,8 +102,20 @@ contract('Test', (accounts) => {
       await proxy.mint(Founder, (100001e18 - 8000000000));
       assert.fail('should have failed before');
     } catch (error) {
-      assert.equal((await proxy.totalSupply.call()).toNumber(), 8000000000);
+      assertRevert(error);
     }
+    assert.equal((await proxy.totalSupply.call()).toNumber(), 8000000000);
+  });
+
+  it('should not allow to re-initialize token contract', async () => {
+    const capBefore = await proxy.cap.call();
+    try {
+      await proxy.initialize(100000e18);
+      assert.fail('should have failed before');
+    } catch (error) {
+      assertRevert(error);
+    }
+    assert.equal((await proxy.cap.call()).toNumber(), capBefore.toNumber());
   });
 
 });

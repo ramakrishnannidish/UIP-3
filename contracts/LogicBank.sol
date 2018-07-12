@@ -3,11 +3,11 @@ pragma solidity ^0.4.11;
 import "./CappedToken.sol";
 
 
-contract Controller is CappedToken {
+contract LogicBank is CappedToken {
 
   uint8 public constant decimals = 18;
 
-  function Controller(uint256 _cap) public
+  function LogicBank(uint256 _cap) public
     CappedToken(_cap)
   {
 
